@@ -1,0 +1,135 @@
+#
+#  test/tests/smoketests.yaml
+#  Testes para garantir que a API acessa a biblioteca SAT e se comporta
+#  conforme o esperado, devolvendo os valores corretamente.
+#
+#  Copyright 2015 Base4 Sistemas Ltda ME
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+#
+
+---
+- config:
+    - testset: "Testes Básicos"
+
+- test:
+    - group: "Metodos SAT-CF-e"
+    - name: "AssociarAssinatura"
+    - url: "/hub/v1/associarassinatura"
+    - method: "POST"
+    - body: "numero_caixa=1&sequencia_cnpj=123456&assinatura_ac=xyz"
+    - expected_status: [200]
+
+- test:
+    - group: "Metodos SAT-CF-e"
+    - name: "AtualizarSoftwareSAT"
+    - url: "/hub/v1/atualizarsoftwaresat"
+    - method: "POST"
+    - body: "numero_caixa=1"
+    - expected_status: [200]
+
+- test:
+    - group: "Metodos SAT-CF-e"
+    - name: "BloquearSAT"
+    - url: "/hub/v1/bloquearsat"
+    - method: "POST"
+    - body: "numero_caixa=1"
+    - expected_status: [200]
+
+- test:
+    - group: "Metodos SAT-CF-e"
+    - name: "CancelarUltimaVenda"
+    - url: "/hub/v1/cancelarultimavenda"
+    - method: "POST"
+    - body: "numero_caixa=1&chave_cfe=CFe123&dados_cancelamento=<CFeCanc>...</CFeCanc>"
+    - expected_status: [200]
+
+- test:
+    - group: "Metodos SAT-CF-e"
+    - name: "ComunicarCertificadoICPBRASIL"
+    - url: "/hub/v1/comunicarcertificadoicpbrasil"
+    - method: "POST"
+    - body: "numero_caixa=1&certificado=CERTIFICADO"
+    - expected_status: [200]
+
+- test:
+    - group: "Metodos SAT-CF-e"
+    - name: "ConfigurarInterfaceDeRede"
+    - url: "/hub/v1/configurarinterfacederede"
+    - method: "POST"
+    - body: "numero_caixa=1&configuracao=<config>...</config>"
+    - expected_status: [200]
+
+- test:
+    - group: "Metodos SAT-CF-e"
+    - name: "ConsultarNumersoSessao"
+    - url: "/hub/v1/consultarnumerosessao"
+    - method: "POST"
+    - body: "numero_caixa=1&numero_sessao=7"
+    - expected_status: [501]
+
+- test:
+    - group: "Metodos SAT-CF-e"
+    - name: "ConsultarSAT"
+    - url: "/hub/v1/consultarsat"
+    - method: "POST"
+    - body: "numero_caixa=1"
+    - expected_status: [200]
+
+- test:
+    - group: "Metodos SAT-CF-e"
+    - name: "ConsultarStatusOperacional"
+    - url: "/hub/v1/consultarstatusoperacional"
+    - method: "POST"
+    - body: "numero_caixa=1"
+    - expected_status: [200]
+
+- test:
+    - group: "Metodos SAT-CF-e"
+    - name: "DesbloquearSAT"
+    - url: "/hub/v1/desbloquearsat"
+    - method: "POST"
+    - body: "numero_caixa=1"
+    - expected_status: [200]
+
+- test:
+    - group: "Metodos SAT-CF-e"
+    - name: "EnviarDadosVenda"
+    - url: "/hub/v1/enviardadosvenda"
+    - method: "POST"
+    - body: "numero_caixa=1&dados_venda=<CFe>...</CFe>"
+    - expected_status: [200]
+
+- test:
+    - group: "Metodos SAT-CF-e"
+    - name: "ExtrairLogs"
+    - url: "/hub/v1/extrairlogs"
+    - method: "POST"
+    - body: "numero_caixa=1"
+    - expected_status: [200]
+
+- test:
+    - group: "Metodos SAT-CF-e"
+    - name: "TesteFimAFim"
+    - url: "/hub/v1/testefimafim"
+    - method: "POST"
+    - body: "numero_caixa=1&dados_venda=<CFe>...</CFe>"
+    - expected_status: [200]
+
+- test:
+    - group: "Metodos SAT-CF-e"
+    - name: "TrocarCodigoDeAtivacao"
+    - url: "/hub/v1/trocarcodigodeativacao"
+    - method: "POST"
+    - body: "numero_caixa=1&opcao=1&novo_codigo=112233445&novo_codigo_confirmacao=112233445"
+    - expected_status: [501]

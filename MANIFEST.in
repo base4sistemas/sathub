@@ -1,0 +1,6 @@
+include LICENSE
+include README.rst
+include CHANGES.rst
+recursive-include sathub/static *
+recursive-include sathub/templates *
+

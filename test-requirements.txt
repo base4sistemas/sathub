@@ -1,0 +1,5 @@
+pytest >= 2.7.1
+PyYAML >= 3.11
+pycurl >= 7.19.5.1
+jsonschema >= 2.5.1
+pyresttest >= 1.3.1
