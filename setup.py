@@ -18,12 +18,12 @@
 #
 
 import io
+import os
+import re
 import sys
 
 from setuptools import setup
 from setuptools.command.test import test as TestCommand
-
-import sathub
 
 
 def read(*filenames, **kwargs):
@@ -46,7 +46,13 @@ def read_requirements(filename, **kwargs):
     return requirements
 
 
-long_description = read('README.rst', 'CHANGES.rst')
+def read_version():
+    content = read(os.path.join(
+            os.path.dirname(__file__), 'sathub', '__init__.py'))
+    return re.search(r"__version__ = '([^']+)'", content).group(1)
+
+
+long_description = read('README.rst')
 
 
 class PyTest(TestCommand):
@@ -69,8 +75,8 @@ class PyTest(TestCommand):
 
 setup(
         name='sathub',
-        version=sathub.__version__,
-        description=u'Compartilhamento de Equipamentos SAT via RESTful API',
+        version=read_version(),
+        description=u'Compartilhamento do equipamento SAT via RESTful API',
         long_description=long_description,
         packages=[
                 'sathub',
@@ -108,4 +114,3 @@ setup(
                 'Topic :: Office/Business :: Financial :: Point-Of-Sale',
             ]
     )
-
