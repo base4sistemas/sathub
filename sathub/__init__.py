@@ -20,7 +20,7 @@
 __version__ = '0.1'
 
 from sathub.comum.config import conf as sathubconf
-from satcfe.config import conf as satcfeconf
+from satcfe import conf as satcfeconf
 
 satcfeconf.codigo_ativacao = sathubconf.codigo_ativacao
 sathubconf.descrever()

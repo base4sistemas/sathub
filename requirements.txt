@@ -1,5 +1,5 @@
 Flask == 0.10.1
-Flask-RESTful == 0.3.2
-Unidecode == 0.04.17
+Flask-RESTful == 0.3.3
+Unidecode == 0.04.18
 satcomum >= 0.0.4
 satcfe >= 0.0.2
