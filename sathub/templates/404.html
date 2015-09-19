@@ -1,0 +1,10 @@
+{% extends "base-navbar.html" %}
+{% block content %}
+    <div class="page-header">
+        <h1>Página não Encontrada</h1>
+        <p class="lead">Não há nada no endereço que você solicitou.</p>
+    </div>
+    <h3>Endereço Solicitado</h3>
+    <p class="well"><tt>{{ request.path }}</tt></p>
+    <p>Voltar para a <a href="/">página inicial</a>.</p>
+{% endblock %}

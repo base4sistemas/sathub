@@ -1,0 +1,104 @@
+{% from 'resposta/_sucesso.html' import atributos_padrao, retorno_bruto %}
+<table class="table table-hover">
+  <thead>
+    <th>Atributo</th>
+    <th>Valor</th>
+  </thead>
+  <tbody>
+    <tr>
+      <td><tt>NSERIE</tt></td>
+      <td><strong><tt>{{ resultado.resposta.NSERIE }}</tt></strong></td>
+    </tr>
+    <tr>
+      <td><tt>TIPO_LAN</tt></td>
+      <td><strong><tt>{{ resultado.resposta.TIPO_LAN }}</tt></strong></td>
+    </tr>
+    <tr>
+      <td><tt>LAN_IP</tt></td>
+      <td><strong><tt>{{ resultado.resposta.LAN_IP }}</tt></strong></td>
+    </tr>
+    <tr>
+      <td><tt>LAN_MAC</tt></td>
+      <td><strong><tt>{{ resultado.resposta.LAN_MAC }}</tt></strong></td>
+    </tr>
+    <tr>
+      <td><tt>LAN_MASK</tt></td>
+      <td><strong><tt>{{ resultado.resposta.LAN_MASK }}</tt></strong></td>
+    </tr>
+    <tr>
+      <td><tt>LAN_GW</tt></td>
+      <td><strong><tt>{{ resultado.resposta.LAN_GW }}</tt></strong></td>
+    </tr>
+    <tr>
+      <td><tt>LAN_DNS_1</tt></td>
+      <td><strong><tt>{{ resultado.resposta.LAN_DNS_1 }}</tt></strong></td>
+    </tr>
+    <tr>
+      <td><tt>LAN_DNS_2</tt></td>
+      <td><strong><tt>{{ resultado.resposta.LAN_DNS_2 }}</tt></strong></td>
+    </tr>
+    <tr>
+      <td><tt>STATUS_LAN</tt></td>
+      <td><strong><tt>{{ resultado.resposta.STATUS_LAN }}</tt></strong></td>
+    </tr>
+    <tr>
+      <td><tt>NIVEL_BATERIA</tt></td>
+      <td><strong><tt>{{ resultado.resposta.NIVEL_BATERIA }}</tt></strong></td>
+    </tr>
+    <tr>
+      <td><tt>MT_TOTAL</tt></td>
+      <td><strong><tt>{{ resultado.resposta.MT_TOTAL }}</tt></strong></td>
+    </tr>
+    <tr>
+      <td><tt>MT_USADA</tt></td>
+      <td><strong><tt>{{ resultado.resposta.MT_USADA }}</tt></strong></td>
+    </tr>
+    <tr>
+      <td><tt>DH_ATUAL</tt></td>
+      <td><strong><tt>{{ resultado.resposta.DH_ATUAL }}</tt></strong></td>
+    </tr>
+    <tr>
+      <td><tt>VER_SB</tt></td>
+      <td><strong><tt>{{ resultado.resposta.VER_SB }}</tt></strong></td>
+    </tr>
+    <tr>
+      <td><tt>VER_LAYOUT</tt></td>
+      <td><strong><tt>{{ resultado.resposta.VER_LAYOUT }}</tt></strong></td>
+    </tr>
+    <tr>
+      <td><tt>ULTIMO_CF_E_SAT</tt></td>
+      <td><strong><tt>{{ resultado.resposta.ULTIMO_CF_E_SAT }}</tt></strong></td>
+    </tr>
+    <tr>
+      <td><tt>LISTA_INICIAL</tt></td>
+      <td><strong><tt>{{ resultado.resposta.LISTA_INICIAL }}</tt></strong></td>
+    </tr>
+    <tr>
+      <td><tt>LISTA_FINAL</tt></td>
+      <td><strong><tt>{{ resultado.resposta.LISTA_FINAL }}</tt></strong></td>
+    </tr>
+    <tr>
+      <td><tt>DH_CFE</tt></td>
+      <td><strong><tt>{{ resultado.resposta.DH_CFE }}</tt></strong></td>
+    </tr>
+    <tr>
+      <td><tt>DH_ULTIMA</tt></td>
+      <td><strong><tt>{{ resultado.resposta.DH_ULTIMA }}</tt></strong></td>
+    </tr>
+    <tr>
+      <td><tt>CERT_EMISSAO</tt></td>
+      <td><strong><tt>{{ resultado.resposta.CERT_EMISSAO }}</tt></strong></td>
+    </tr>
+    <tr>
+      <td><tt>CERT_VENCIMENTO</tt></td>
+      <td><strong><tt>{{ resultado.resposta.CERT_VENCIMENTO }}</tt></strong></td>
+    </tr>
+    <tr>
+      <td><tt>ESTADO_OPERACAO</tt></td>
+      <td><strong><tt>{{ resultado.resposta.ESTADO_OPERACAO }}</tt>
+          &ndash; {{ resultado.resposta.status }}</strong></td>
+    </tr>
+  </tbody>
+</table>
+{{ retorno_bruto(resultado) }}
+{{ atributos_padrao(resultado) }}

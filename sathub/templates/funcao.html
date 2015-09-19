@@ -1,0 +1,62 @@
+{% extends "base-navbar.html" %}
+{% block content %}
+<div class="page-header">
+  <h1>{{ funcao.titulo }}</h1>
+  <p class="lead">{{ funcao.descricao }}</p>
+</div>
+
+<form action="{{ url_for('executar_funcao_sat', funcaosat=funcao.funcao|lower) }}" method="post">
+  {{ form.csrf_token }}
+  <p>
+    <button class="btn btn-primary" type="button" data-toggle="collapse"
+      data-target="#collapseConfig" aria-expanded="false"
+      aria-controls="collapseConfig">
+      <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+      Configurações
+    </button>
+
+    <button class="btn btn-danger" type="submit">
+      <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+      Executar
+    </button>
+
+    <tt>{{ funcao.funcao }}</tt>
+  </p>
+</form>
+
+<div class="collapse" id="collapseConfig">
+  <div class="well">
+    {% if current_user.is_authenticated %}
+      <p>Biblioteca <strong><tt>{{ sathubconf.caminho_dll }}</tt></strong>
+          {% if not sathubconf.is_biblioteca_existente %}
+            <span class="label label-danger">inexistente</span>
+          {% endif %}
+          <br/>
+          Convenção de Chamada <strong><tt>{{ sathubconf.convencao_chamada }}</tt> &ndash; {{ sathubconf.nome_convencao_chamada }}</strong><br/>
+          Código de Ativação <strong><tt>{{ sathubconf.codigo_ativacao }}</tt></strong></p>
+
+      <p><small>Python {{ python_version }} | Flask {{ flask_version }}<br/>
+          {{ platform_uname }}</small></p>
+    {% else %}
+      Você precisa fazer o <strong>login</strong> para poder ver os
+      detalhes das configurações.
+    {% endif %}
+  </div>
+</div>
+
+{% if resultado %} {# instância de sathub.executor.ResultadoFuncao #}
+  {% from 'resposta/_falha.html' import painel_falha %}
+  {% if resultado.sucesso %}
+    <div class="panel panel-success">
+      <div class="panel-heading">
+        <h3>Sucesso</h3>
+      </div>
+      {% set template='resposta/'+resultado.funcao.lower()+'.html' %}
+      {% include template %}
+    </div>
+  {% else %}
+    {{ painel_falha(resultado, current_user=current_user) }}
+  {% endif %}
+{% endif %}
+
+{% endblock %}

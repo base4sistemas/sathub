@@ -26,7 +26,10 @@ satcfeconf.codigo_ativacao = sathubconf.codigo_ativacao
 sathubconf.descrever()
 
 from flask import Flask
+
 app = Flask(__name__)
+app.secret_key = 'GTkjQdFVtRbmQpc0CoUAFiBUCSpLujtd'
+app.debug = sathubconf.debug
 
 import sathub.api
 import sathub.views

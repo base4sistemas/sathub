@@ -26,7 +26,7 @@ Projeto SATHub
     class names, as well as documentation, are written in brazilian
     portuguese.
 
-    Refer to the `oficial web site <http://www.fazenda.sp.gov.br/sat/>`_ for
+    Refer to the `official web site <http://www.fazenda.sp.gov.br/sat/>`_ for
     more information (in brazilian portuguese only).
 
 
@@ -39,9 +39,12 @@ compartilhar um único equipamento SAT. Por se tratar de uma API RESTful,
 qualquer aplicação de ponto-de-venda pode invocar funções SAT, desde que seja
 capaz de fazer requisições HTTP simples.
 
-.. image:: https://raw.github.com/base4sistemas/sathub/master/doc/static/topologia.png
+Também fornece um *frontend* web leve para tornar possível o acesso às funções
+do equipamento SAT a partir de um navegador com suporte à HTML5.
+
+.. image:: https://raw.github.com/base4sistemas/sathub/master/doc/static/screenshots/20150919/composicao.png
     :align: center
-    :alt: Topologia envolvendo um servidor SATHub e um equipamento SAT
+    :alt: Capturas de tela da aplicação SATHub.
 
 Este projeto integra os projetos `SATCFe <https://github.com/base4sistemas/satcfe>`_ e
 `SATcomum <https://github.com/base4sistemas/satcomum>` para fornecer uma API

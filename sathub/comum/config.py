@@ -31,12 +31,16 @@ _CONF_DEBUG = 'debug'
 _CONF_CAMINHO_DLL = 'caminho_dll'
 _CONF_CONVENCAO_CHAMADA = 'convencao_chamada'
 _CONF_CODIGO_ATIVACAO = 'codigo_ativacao'
+_CONF_USUARIO = 'usuario'
+_CONF_SENHA = 'senha'
 
 
 _PADRAO_DEBUG = True
 _PADRAO_CAMINHO_DLL = 'sat.dll'
 _PADRAO_CONVENCAO_CHAMADA = satcomum.constantes.WINDOWS_STDCALL
 _PADRAO_CODIGO_ATIVACAO = '123456789'
+_PADRAO_USUARIO = 'sathub'
+_PADRAO_SENHA = 'sathub'
 
 
 CONFIGURACAO_PADRAO = {
@@ -44,8 +48,9 @@ CONFIGURACAO_PADRAO = {
         _CONF_CAMINHO_DLL: _PADRAO_CAMINHO_DLL,
         _CONF_CONVENCAO_CHAMADA: _PADRAO_CONVENCAO_CHAMADA,
         _CONF_CODIGO_ATIVACAO: _PADRAO_CODIGO_ATIVACAO,
+        _CONF_USUARIO: _PADRAO_USUARIO,
+        _CONF_SENHA: _PADRAO_SENHA,
     }
-
 
 
 class Configuracoes(object):
@@ -61,6 +66,8 @@ class Configuracoes(object):
         self.caminho_dll = _PADRAO_CAMINHO_DLL
         self.convencao_chamada = _PADRAO_CONVENCAO_CHAMADA
         self.codigo_ativacao = _PADRAO_CODIGO_ATIVACAO
+        self.usuario = _PADRAO_USUARIO
+        self.senha = _PADRAO_SENHA
 
         self._carregar()
         self._configurar_log()
@@ -70,6 +77,11 @@ class Configuracoes(object):
     def nome_convencao_chamada(self):
         return [s for v,s in satcomum.constantes.CONVENCOES_CHAMADA \
                         if v == self.convencao_chamada][0]
+
+
+    @property
+    def is_biblioteca_existente(self):
+        return os.path.isfile(self.caminho_dll)
 
 
     def _carregar(self):
@@ -97,6 +109,9 @@ class Configuracoes(object):
         if self.convencao_chamada not in _convencoes:
             raise ValueError('Valor inesperado para convencao de '
                     'chamada: {}'.format(self.convencao_chamada))
+
+        self.usuario = dados.get(_CONF_USUARIO, _PADRAO_USUARIO)
+        self.senha = dados.get(_CONF_SENHA, _PADRAO_SENHA)
 
 
     def _configurar_log(self):
@@ -127,7 +142,7 @@ class Configuracoes(object):
         _verbose(u'[-] Convenção de chamada para DLL: {}',
                 self.nome_convencao_chamada)
 
-        if not os.path.exists(self.caminho_dll):
+        if not self.is_biblioteca_existente:
             _verbose(u'** DLL NÃO ENCONTRADA **')
 
         _verbose(u'')

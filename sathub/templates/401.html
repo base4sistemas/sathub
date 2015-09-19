@@ -1,0 +1,11 @@
+{% extends "base-navbar.html" %}
+{% block content %}
+    <div class="alert alert-danger" role="alert">
+        <h1><strong>Acesso Negado</strong></h1>
+        <p class="lead">O recurso que você está tentando acessar requer uma identificação de usuário.</p>
+    </div>
+    <h3>Endereço Solicitado</h3>
+    <p class="well"><tt>{{ request.path }}</tt></p>
+    <p>Faça o <a href="{{ url_for('login', next=request.path) }}">login</a> ou
+        retorne à <a href="/">página inicial</a>.</p>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% from 'resposta/_sucesso.html' import atributos_padrao, retorno_bruto %}
+{% macro painel_falha(resultado, current_user=None) -%}
+{# resultado é uma instância de sathub.executor.ResultadoFuncao #}
+  {% if not resultado.sucesso %}
+    <div class="panel panel-danger">
+      <div class="panel-heading">
+        <h3>Função Falhou</h3>
+      </div>
+      {% if resultado.resposta %}
+        {{ retorno_bruto(resultado) }}
+        {{ atributos_padrao(resultado) }}
+      {% else %}
+        {# se o resultado não possui uma resposta, apresenta a pilha de
+           de chamada se houver um usuário autenticado. #}
+        <div class="panel-body">
+          {% if current_user and current_user.is_authenticated %}
+             <p><textarea class="form-control" rows="7"
+                  style="font-family:monospace;" readonly>{{ resultado.traceback|e }}</textarea></p>
+          {% else %}
+             <p>Você precisa fazer o <strong>login</strong> para poder ver os
+                detalhes do problema.</p>
+          {% endif %}
+        </div> <!-- panel-body -->
+      {% endif %}
+    </div> <!-- panel-danger -->
+  {% endif %}
+{%- endmacro %}

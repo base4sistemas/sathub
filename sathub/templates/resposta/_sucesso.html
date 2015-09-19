@@ -1,0 +1,40 @@
+{% macro atributos_padrao(resultado) -%}
+{# resultado é uma instância de sathub.executor.ResultadoFuncao #}
+<table class="table table-hover">
+  <thead>
+    <th>Atributo</th>
+    <th>Valor</th>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Número Sessão</td>
+      <td><strong><tt>{{ resultado.resposta.numeroSessao }}</tt></strong></td>
+    </tr>
+    <tr>
+      <td>EEEEE</td>
+      <td><strong><tt>{{ resultado.resposta.EEEEE }}</tt></strong></td>
+    </tr>
+    <tr>
+      <td>Mensagem</td>
+      <td><strong>{{ resultado.resposta.mensagem|e }}</strong></td>
+    </tr>
+    <tr>
+      <td>Código SEFAZ</td>
+      <td><strong><tt>{{ resultado.resposta.cod }}</tt></strong></td>
+    </tr>
+    <tr>
+      <td>Mensagem SEFAZ</td>
+      <td><strong>{{ resultado.resposta.mensagemSEFAZ }}</strong></td>
+    </tr>
+  </tbody>
+</table>
+{%- endmacro %}
+
+{% macro retorno_bruto(resultado) -%}
+{# resultado é uma instância de sathub.executor.ResultadoFuncao #}
+<div class="panel-body">
+  <p><strong>Retorno Bruto</strong></p>
+  <p><textarea class="form-control" rows="4" style="font-family:monospace;"
+      placeholder="(vazio)" readonly>{{ resultado.resposta.atributos.verbatim|e }}</textarea></p>
+</div>
+{%- endmacro %}

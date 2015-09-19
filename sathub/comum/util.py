@@ -24,9 +24,11 @@ import sys
 
 from satcfe import DLLSAT
 from satcfe import conf as satcfeconf
+from satcfe import ClienteSATLocal
 from satcfe.base import FuncoesSAT
 
 from .config import conf
+
 
 NUM_SESSAO_MIN = 100000
 NUM_SESSAO_MAX = 999999
@@ -116,7 +118,7 @@ class NumeradorSessaoPorCaixa(object):
         self._tamanho = tamanho
         self._numero_caixa = numero_caixa
 
-        assert 0 <= self._numero_caixa <= 9, \
+        assert NUM_CAIXA_MIN <= self._numero_caixa <= NUM_CAIXA_MAX, \
                 'Numero do caixa fora da faixa (0..999): {}'.format(
                         self._numero_caixa)
 
@@ -182,6 +184,15 @@ def instanciar_funcoes_sat(numero_caixa):
                     convencao=conf.convencao_chamada),
             numerador_sessao=instanciar_numerador_sessao(numero_caixa))
     return funcoes_sat
+
+
+@memoize
+def instanciar_cliente_local(numero_caixa):
+    cliente = ClienteSATLocal(
+            dll=DLLSAT(caminho=conf.caminho_dll,
+                    convencao=conf.convencao_chamada),
+            numerador_sessao=instanciar_numerador_sessao(numero_caixa))
+    return cliente
 
 
 def hexdump(data):

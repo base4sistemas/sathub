@@ -1,0 +1,7 @@
+{% from 'resposta/_sucesso.html' import atributos_padrao, retorno_bruto %}
+<div class="panel-body">
+    <h3>Conteúdo do Log Decodificado</h3>
+    <p><textarea class="form-control" rows="21" style="font-family:monospace;" readonly>{{ resultado.conteudo_log|e }}</textarea></p>
+</div>
+{{ retorno_bruto(resultado) }}
+{{ atributos_padrao(resultado) }}
