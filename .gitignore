@@ -4,6 +4,8 @@ __pycache__/
 /dist/
 /sathub.egg-info/
 /*.egg/
+/*.eggs/
+/docs/_build/
 
 conf.json
 sathub.log

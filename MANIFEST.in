@@ -3,4 +3,4 @@ include README.rst
 include CHANGES.rst
 recursive-include sathub/static *
 recursive-include sathub/templates *
-recursive-include doc/*
+recursive-include docs/*
