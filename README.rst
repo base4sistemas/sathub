@@ -46,7 +46,7 @@ capaz de fazer requisições HTTP simples.
 Também fornece um *front-end* web leve para tornar possível o acesso às funções
 do equipamento SAT a partir de um navegador com suporte à HTML5.
 
-.. image:: https://raw.github.com/base4sistemas/sathub/master/doc/static/screenshots/20150919/composicao.png
+.. image:: https://raw.github.com/base4sistemas/sathub/master/docs/_static/screenshots/20150919/composicao.png
     :align: center
     :alt: Screenshots do front-end SATHub.
 
