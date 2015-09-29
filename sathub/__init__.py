@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-__version__ = '0.2'
+__version__ = '0.3'
 
 from sathub.comum.config import conf as sathubconf
 from satcfe import conf as satcfeconf
