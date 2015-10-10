@@ -39,7 +39,7 @@ from flask.ext.login import logout_user
 from . import __version__ as sathub_version
 from . import app
 from . import executor
-from . import sathubconf
+from . import conf as sathubconf
 from .forms import EmptyForm
 from .forms import LoginForm
 

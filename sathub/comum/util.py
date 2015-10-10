@@ -22,8 +22,7 @@ import os
 import random
 import sys
 
-from satcfe import DLLSAT
-from satcfe import conf as satcfeconf
+from satcfe import BibliotecaSAT
 from satcfe import ClienteSATLocal
 from satcfe.base import FuncoesSAT
 
@@ -179,9 +178,8 @@ def instanciar_numerador_sessao(numero_caixa):
 @memoize
 def instanciar_funcoes_sat(numero_caixa):
     funcoes_sat = FuncoesSAT(
-            dll=DLLSAT(
-                    caminho=conf.caminho_dll,
-                    convencao=conf.convencao_chamada),
+            BibliotecaSAT(conf.caminho_dll, convencao=conf.convencao_chamada),
+            codigo_ativacao=conf.codigo_ativacao,
             numerador_sessao=instanciar_numerador_sessao(numero_caixa))
     return funcoes_sat
 
@@ -189,8 +187,8 @@ def instanciar_funcoes_sat(numero_caixa):
 @memoize
 def instanciar_cliente_local(numero_caixa):
     cliente = ClienteSATLocal(
-            dll=DLLSAT(caminho=conf.caminho_dll,
-                    convencao=conf.convencao_chamada),
+            BibliotecaSAT(conf.caminho_dll, convencao=conf.convencao_chamada),
+            codigo_ativacao=conf.codigo_ativacao,
             numerador_sessao=instanciar_numerador_sessao(numero_caixa))
     return cliente
 

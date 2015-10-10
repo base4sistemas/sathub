@@ -17,19 +17,20 @@
 # limitations under the License.
 #
 
+import base64
+import os
+
 __version__ = '0.3'
 
-from sathub.comum.config import conf as sathubconf
-from satcfe import conf as satcfeconf
-
-satcfeconf.codigo_ativacao = sathubconf.codigo_ativacao
-sathubconf.descrever()
+from sathub.comum.config import conf
+conf.descrever()
 
 from flask import Flask
 
 app = Flask(__name__)
-app.secret_key = 'GTkjQdFVtRbmQpc0CoUAFiBUCSpLujtd'
-app.debug = sathubconf.debug
+app.debug = conf.debug
+app.secret_key = os.environ.get('SATHUB_SECRET_KEY') or \
+        base64.b64encode('Nullum secretum est ubi regnat ebrietas')
 
 import sathub.api
 import sathub.views
