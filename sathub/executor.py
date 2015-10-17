@@ -42,7 +42,7 @@ class ResultadoFuncao(object):
 
         if not self.resposta:
             if self.exc_type == ExcecaoRespostaSAT:
-                self.resposta = self.exc_value
+                self.resposta = self.exc_value.resposta
 
 
     @property
@@ -76,9 +76,9 @@ class ResultadoFuncao(object):
 
 
 
-def _executar(funcao, metodo, *args, **kwargs):
+def _executar(alias, funcao, metodo, *args, **kwargs):
     try:
-        cliente = util.instanciar_cliente_local(CAIXA)
+        cliente = util.instanciar_cliente_local(CAIXA, alias)
         resposta = getattr(cliente, metodo)(*args, **kwargs)
         return ResultadoFuncao(funcao, resposta=resposta)
 
@@ -96,16 +96,16 @@ def _executar(funcao, metodo, *args, **kwargs):
 
 
 def consultarsat(form):
-    return _executar('ConsultarSAT', 'consultar_sat')
+    return _executar(form.alias.data, 'ConsultarSAT', 'consultar_sat')
 
 
 def consultarstatusoperacional(form):
-    return _executar('ConsultarStatusOperacional',
+    return _executar(form.alias.data, 'ConsultarStatusOperacional',
             'consultar_status_operacional')
 
 
 def extrairlogs(form):
-    resultado = _executar('ExtrairLogs', 'extrair_logs')
+    resultado = _executar(form.alias.data, 'ExtrairLogs', 'extrair_logs')
     if resultado.sucesso: # (!) alerta para 'quick fix'
         resultado.conteudo_log = unidecode(resultado.resposta.conteudo())
     return resultado

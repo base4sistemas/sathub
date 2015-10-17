@@ -17,138 +17,279 @@
 # limitations under the License.
 #
 
+import collections
 import json
 import logging
 import os
 import sys
+
+from logging.config import dictConfig
+
+from cerberus import Validator
 
 from unidecode import unidecode
 
 import satcomum.constantes
 
 
-_CONF_DEBUG = 'debug'
-_CONF_CAMINHO_DLL = 'caminho_dll'
-_CONF_CONVENCAO_CHAMADA = 'convencao_chamada'
-_CONF_CODIGO_ATIVACAO = 'codigo_ativacao'
-_CONF_USUARIO = 'usuario'
-_CONF_SENHA = 'senha'
+PROJECT_ROOT = os.path.join(
+        os.path.abspath(os.path.dirname(__file__)), '..', '..')
 
 
-_PADRAO_DEBUG = True
-_PADRAO_CAMINHO_DLL = 'sat.dll'
-_PADRAO_CONVENCAO_CHAMADA = satcomum.constantes.WINDOWS_STDCALL
-_PADRAO_CODIGO_ATIVACAO = '123456789'
-_PADRAO_USUARIO = 'sathub'
-_PADRAO_SENHA = 'sathub'
-
-
-CONFIGURACAO_PADRAO = {
-        _CONF_DEBUG: _PADRAO_DEBUG,
-        _CONF_CAMINHO_DLL: _PADRAO_CAMINHO_DLL,
-        _CONF_CONVENCAO_CHAMADA: _PADRAO_CONVENCAO_CHAMADA,
-        _CONF_CODIGO_ATIVACAO: _PADRAO_CODIGO_ATIVACAO,
-        _CONF_USUARIO: _PADRAO_USUARIO,
-        _CONF_SENHA: _PADRAO_SENHA,
+DEFAULT_LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': True,
+        'formatters': {
+                'verbose': {
+                        'format': '%(asctime)s %(levelname)-8s [%(name)s] '\
+                                        '(%(module)s:%(lineno)d) %(message)s'
+                    },
+                'simple': {
+                        'format': '%(levelname)-8s [%(name)s] %(message)s'
+                    }
+            },
+        'filters': {},
+        'handlers': {
+                'null': {
+                        'level':'DEBUG',
+                        'class':'logging.NullHandler',
+                    },
+                'console':{
+                        'level':'DEBUG',
+                        'class':'logging.StreamHandler',
+                        'formatter': 'simple'
+                    },
+                'socket': {
+                        'level': 'WARNING',
+                        'class': 'logging.handlers.SocketHandler',
+                        'host': '10.0.0.1',
+                        'port': 7007
+                    }
+        },
+        'loggers': {
+                'flask': {
+                        'handlers': ['null'],
+                        'propagate': True,
+                        'level':'INFO'
+                    },
+                'satcfe': {
+                        'handlers': ['socket'],
+                        'propagate': True,
+                        'level': 'WARNING'
+                    },
+                'sathub': {
+                        'handlers': ['socket'],
+                        'level': 'WARNING',
+                        'propagate': False
+                    }
+            }
     }
 
 
-class Configuracoes(object):
+DEFAULT_CONFIG = {
+        'debug': True,
+        'usuario': 'sathub',
+        'senha': 'sathub',
+        'endpoints': [
+                {
+                        'alias': '900000001',
+                        'descricao': 'Equipamento SAT 1',
+                        'codigo_ativacao': '12345678',
+                        'caminho_biblioteca': '/opt/fabricante/libsat.so',
+                        'convencao_chamada': satcomum.constantes.STANDARD_C,
+                },
+            ]
+    }
 
-    def __init__(self):
-        super(Configuracoes, self).__init__()
 
-        self.pasta_projeto = os.path.abspath(os.path.join(
-                os.path.abspath(os.path.dirname(__file__)), '..', '..'))
+EndpointBase = collections.namedtuple('EndpointBase',
+        'alias descricao codigo_ativacao caminho_biblioteca convencao_chamada')
 
-        self.arquivo = os.path.join(self.pasta_projeto, 'conf.json')
-        self.debug = _PADRAO_DEBUG
-        self.caminho_dll = _PADRAO_CAMINHO_DLL
-        self.convencao_chamada = _PADRAO_CONVENCAO_CHAMADA
-        self.codigo_ativacao = _PADRAO_CODIGO_ATIVACAO
-        self.usuario = _PADRAO_USUARIO
-        self.senha = _PADRAO_SENHA
 
-        self._carregar()
-        self._configurar_log()
+class Endpoint(EndpointBase):
+
+    __slots__ = ()
+
+
+    @property
+    def is_biblioteca_disponivel(self):
+        return os.path.isfile(self.caminho_biblioteca)
 
 
     @property
     def nome_convencao_chamada(self):
-        return [s for v,s in satcomum.constantes.CONVENCOES_CHAMADA \
-                        if v == self.convencao_chamada][0]
+        for convencao, nome in satcomum.constantes.CONVENCOES_CHAMADA:
+            if convencao == self.convencao_chamada:
+                return nome
+        return u'(convencao desconhecida: {!r})'.format(self.convencao_chamada)
+
+
+class Configuracoes(object):
+    """
+
+    Um arquivo de configurações de exemplo:
+
+    .. sourcecode:: json
+
+        {
+            "debug": false,
+            "usuario": "sathub",
+            "senha": "sathub",
+            "endpoints": [
+                {
+                    "alias": "900000001",
+                    "descricao": "Tanca SDK-1000",
+                    "codigo_ativacao": "12345678",
+                    "caminho_biblioteca": "/opt/tanca/libsat64.so",
+                    "convencao_chamada": 1
+                },
+                {
+                    "alias": "900000002",
+                    "descricao": "Dimep D-Sat",
+                    "codigo_ativacao": "12345678",
+                    "caminho_biblioteca": "/opt/dimep/libsatprotocol.so",
+                    "convencao_chamada": 1
+                },
+                {
+                    "alias": "900000003",
+                    "descricao": "Bematech RB-1000 FI",
+                    "codigo_ativacao": "123456789",
+                    "caminho_biblioteca": "/opt/bematech/libbemasat64.so",
+                    "convencao_chamada": 1
+                },
+            ]
+        }
+
+    """
+
+    def __init__(self, origem=None):
+
+        validator = Validator(schema={
+                'debug': {
+                        'type': 'boolean',
+                        'required': True},
+                'usuario': {
+                        'type': 'string',
+                        'required': True,
+                        'minlength': 2,
+                        'maxlength': 60},
+                'senha': {
+                        'type': 'string',
+                        'required': True,
+                        'minlength': 6},
+                'endpoints': {
+                        'type': 'list',
+                        'required': True,
+                        'minlength': 1,
+                        'schema': {
+                                'type': 'dict',
+                                'schema': {
+                                        'alias': {
+                                                'type': 'string',
+                                                'regex': r'^[a-zA-Z0-9-_]+$'},
+                                        'descricao': {
+                                                'type': 'string',
+                                                'minlength': 1,
+                                                'maxlength': 100},
+                                        'codigo_ativacao': {
+                                                'type': 'string',
+                                                'required': True,
+                                                'minlength': 1},
+                                        'caminho_biblioteca': {
+                                                'type': 'string',
+                                                'required': True},
+                                        'convencao_chamada': {
+                                                'type': 'integer',
+                                                'allowed': [v for v,s in satcomum.constantes.CONVENCOES_CHAMADA]}
+                                    }
+                            }
+                    }
+            }, purge_unknown=True)
+
+        self._origem = origem or os.path.join(PROJECT_ROOT, 'config-sathub.json')
+
+        if origem is None: # a origem do arquivo de configurações é a padrão
+            if not os.path.isfile(self._origem):
+                # arquivo de configurações padrão não existe;
+                # cria um para que possa ser editado
+                with open(self._origem, 'w') as f:
+                    f.write(json.dumps(DEFAULT_CONFIG, indent=4))
+
+        with open(self._origem, 'r') as f:
+            self._confdata = json.load(f)
+
+        validator.allow_unknown = True
+
+        if not validator.validate(self._confdata):
+            raise RuntimeError('Configuration error: {!r}'.format(
+                    validator.errors))
 
 
     @property
-    def is_biblioteca_existente(self):
-        return os.path.isfile(self.caminho_dll)
+    def origem(self):
+        return self._origem
 
 
-    def _carregar(self):
-        if os.path.exists(self.arquivo):
-            with open(self.arquivo, 'r') as f:
-                dados = json.load(f)
-        else:
-            dados = CONFIGURACAO_PADRAO
-            # salva um arquivo de configurações para que possa ser editado
-            with open(self.arquivo, 'w') as f:
-                f.write(json.dumps(CONFIGURACAO_PADRAO, indent=4))
-
-        self.debug = dados.get(_CONF_DEBUG, _PADRAO_DEBUG)
-        self.codigo_ativacao = dados.get(
-                _CONF_CODIGO_ATIVACAO, _PADRAO_CODIGO_ATIVACAO)
-
-        self.caminho_dll = dados.get(_CONF_CAMINHO_DLL, _PADRAO_CAMINHO_DLL)
-        self.caminho_dll = os.path.expanduser(
-                self.caminho_dll.replace('/', os.path.sep))
-
-        self.convencao_chamada = dados.get(
-                _CONF_CONVENCAO_CHAMADA, _PADRAO_CONVENCAO_CHAMADA)
-
-        _convencoes = [v for v,s in satcomum.constantes.CONVENCOES_CHAMADA]
-        if self.convencao_chamada not in _convencoes:
-            raise ValueError('Valor inesperado para convencao de '
-                    'chamada: {}'.format(self.convencao_chamada))
-
-        self.usuario = dados.get(_CONF_USUARIO, _PADRAO_USUARIO)
-        self.senha = dados.get(_CONF_SENHA, _PADRAO_SENHA)
+    @property
+    def is_debug(self):
+        return self._confdata['debug']
 
 
-    def _configurar_log(self):
-        filename = os.path.join(self.pasta_projeto, 'sathub.log')
+    @property
+    def usuario(self):
+        return self._confdata['usuario']
 
-        handler = logging.FileHandler(filename)
-        handler.setFormatter(
-                logging.Formatter('%(asctime)s %(levelname)-8s [%(name)s] '
-                        '(%(module)s:%(lineno)d) %(message)s'))
 
-        level = logging.DEBUG if self.debug else logging.WARNING
+    @property
+    def senha(self):
+        return self._confdata['senha']
 
-        for name in ['flask', 'sathub',]:
-            logger = logging.getLogger(name)
-            logger.setLevel(level)
-            logger.addHandler(handler)
+
+    @property
+    def endpoints(self):
+        return [Endpoint(**ep) for ep in self._confdata['endpoints']]
+
+
+    def get_endpoint(self, alias):
+        """Obtém os dados do ``Endpoint`` (*named tuple*) associado ao alias."""
+        for ep in self._confdata['endpoints']:
+            if ep['alias'] == alias:
+                return Endpoint(**ep)
+        raise ValueError('Endpoint nao encontrado, alias: {!r}'.format(alias))
 
 
     def descrever(self):
-        """
-        Descreve as configurações na saída padrão ou no terminal, se houver um.
+        """Descreve as configurações na saída padrão ou no terminal, se
+        houver um.
         """
         import sathub
-
         _verbose(u'SATHub versão {}', sathub.__version__)
-        _verbose(u'[-] Debug está {}', 'LIGADO' if self.debug else 'DESLIGADO')
-        _verbose(u'[-] Caminho para DLL: {}', self.caminho_dll)
-        _verbose(u'[-] Convenção de chamada para DLL: {}',
-                self.nome_convencao_chamada)
 
-        if not self.is_biblioteca_existente:
-            _verbose(u'** DLL NÃO ENCONTRADA **')
+        for i, ep in enumerate(self.endpoints):
+            _verbose('[-] Endpoint ({:d}) "{:s}"', i, ep.descricao)
+            _verbose('[-]     Biblioteca "{:s}"', ep.caminho_biblioteca)
+            _verbose('[-]     Convencao Chamada {:d} - {:s}',
+                    ep.convencao_chamada, ep.nome_convencao_chamada)
+            _verbose('[-] ')
 
         _verbose(u'')
 
 
-conf = Configuracoes()
+
+def _configure_logging(config_path=None):
+    filename = config_path or os.path.join(PROJECT_ROOT, 'config-log.json')
+
+    if not os.path.isfile(filename):
+        # arquivo de configurações de log não existe;
+        # cria um para que possa ser editado se necessário
+        with open(filename, 'w') as f:
+            f.write(json.dumps(DEFAULT_LOGGING, indent=4))
+
+    # carrega as configurações de logging e configura via dictConfig
+    with open(filename, 'r') as f:
+        logging_config = json.load(f)
+
+    dictConfig(logging_config)
 
 
 def _verbose(message, *args):
@@ -167,3 +308,10 @@ def _verbose(message, *args):
         # https://code.google.com/p/modwsgi/wiki/ConfigurationDirectives#WSGIRestrictStdout
         if msg:
             print >> sys.stdout, 'SATHub: {}'.format(as_ascii(msg))
+
+
+_configure_logging(config_path=os.environ.get('SATHUB_LOG_CONFIG_PATH'))
+
+logger = logging.getLogger('sathub.conf')
+
+conf = Configuracoes(origem=os.environ.get('SATHUB_CONFIG_PATH'))

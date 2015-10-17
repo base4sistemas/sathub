@@ -39,8 +39,8 @@ from flask.ext.login import logout_user
 from . import __version__ as sathub_version
 from . import app
 from . import executor
-from . import sathubconf
-from .forms import EmptyForm
+from .comum.config import conf as sathubconf
+from .forms import BasicEndpointForm
 from .forms import LoginForm
 
 
@@ -93,7 +93,7 @@ login_manager.init_app(app)
 @app.context_processor
 def injetar_extrainfo():
     return dict(
-            sathubconf=sathubconf,
+            conf=sathubconf,
             flask_version=flask.__version__,
             python_version=platform.python_version(),
             platform_uname=' | '.join(platform.uname()),
@@ -157,7 +157,11 @@ def executar_funcao_sat(funcaosat):
         if not funcao:
             abort(404)
 
-    form = funcao.get('form_class', EmptyForm)(request.form)
+    form = funcao.get('form_class', BasicEndpointForm)(request.form)
+    form.alias.choices = [(ep.alias,
+            '({}) {}'.format(ep.alias, ep.descricao),) for ep \
+                    in sathubconf.endpoints]
+
     if request.method == 'POST' and form.validate():
         resultado = getattr(executor, funcao.get('funcao').lower())(form)
 

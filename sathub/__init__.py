@@ -19,17 +19,14 @@
 
 __version__ = '0.2'
 
-from sathub.comum.config import conf as sathubconf
-from satcfe import conf as satcfeconf
-
-satcfeconf.codigo_ativacao = sathubconf.codigo_ativacao
-sathubconf.descrever()
+from sathub.comum.config import conf
+conf.descrever()
 
 from flask import Flask
 
 app = Flask(__name__)
 app.secret_key = 'GTkjQdFVtRbmQpc0CoUAFiBUCSpLujtd'
-app.debug = sathubconf.debug
+app.debug = conf.is_debug
 
 import sathub.api
 import sathub.views

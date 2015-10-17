@@ -22,11 +22,11 @@ import os
 import random
 import sys
 
-from satcfe import DLLSAT
-from satcfe import conf as satcfeconf
+from satcfe import BibliotecaSAT
 from satcfe import ClienteSATLocal
 from satcfe.base import FuncoesSAT
 
+from .config import PROJECT_ROOT
 from .config import conf
 
 
@@ -122,7 +122,7 @@ class NumeradorSessaoPorCaixa(object):
                 'Numero do caixa fora da faixa (0..999): {}'.format(
                         self._numero_caixa)
 
-        self._arquivo_json = os.path.join(conf.pasta_projeto,
+        self._arquivo_json = os.path.join(PROJECT_ROOT,
                 'sessoes-cx-{}.json'.format(self._numero_caixa))
 
 
@@ -177,20 +177,21 @@ def instanciar_numerador_sessao(numero_caixa):
 
 
 @memoize
-def instanciar_funcoes_sat(numero_caixa):
+def instanciar_funcoes_sat(numero_caixa, alias):
+    ep = conf.get_endpoint(alias)
     funcoes_sat = FuncoesSAT(
-            dll=DLLSAT(
-                    caminho=conf.caminho_dll,
-                    convencao=conf.convencao_chamada),
+            BibliotecaSAT(ep.caminho_biblioteca,
+                    convencao=ep.convencao_chamada),
             numerador_sessao=instanciar_numerador_sessao(numero_caixa))
     return funcoes_sat
 
 
 @memoize
-def instanciar_cliente_local(numero_caixa):
+def instanciar_cliente_local(numero_caixa, alias):
+    ep = conf.get_endpoint(alias)
     cliente = ClienteSATLocal(
-            dll=DLLSAT(caminho=conf.caminho_dll,
-                    convencao=conf.convencao_chamada),
+            BibliotecaSAT(ep.caminho_biblioteca,
+                    convencao=ep.convencao_chamada),
             numerador_sessao=instanciar_numerador_sessao(numero_caixa))
     return cliente
 

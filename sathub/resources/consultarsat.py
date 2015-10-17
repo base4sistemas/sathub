@@ -33,15 +33,15 @@ parser = request_parser()
 
 class ConsultarSAT(restful.Resource):
 
-    def post(self):
+    def post(self, alias=None):
         args = parser.parse_args()
 
         numero_caixa = args['numero_caixa']
-        fsat = instanciar_funcoes_sat(numero_caixa)
+        fsat = instanciar_funcoes_sat(numero_caixa, alias)
         retorno = fsat.consultar_sat()
 
         if logger.isEnabledFor(logging.DEBUG):
-            logger.debug('Retorno "ConsultarSAT" (numero_caixa=%s)\n%s',
-                    numero_caixa, hexdump(retorno))
+            logger.debug('Retorno "ConsultarSAT" (numero_caixa=%r, '
+                    'alias=%r)\n%s', numero_caixa, alias, hexdump(retorno))
 
         return dict(funcao='ConsultarSAT', retorno=retorno)
