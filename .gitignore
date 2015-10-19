@@ -7,8 +7,8 @@ __pycache__/
 /*.eggs/
 /docs/_build/
 
-conf.json
-sathub.log
+config-log.json
+config-sathub.json
 sessoes-cx-*.json
 
 *.pyc

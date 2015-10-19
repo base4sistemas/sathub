@@ -28,7 +28,7 @@ conf.descrever()
 from flask import Flask
 
 app = Flask(__name__)
-app.debug = conf.debug
+app.debug = conf.is_debug
 app.secret_key = os.environ.get('SATHUB_SECRET_KEY') or \
         base64.b64encode('Nullum secretum est ubi regnat ebrietas')
 

@@ -27,14 +27,15 @@
 <div class="collapse" id="collapseConfig">
   <div class="well">
     {% if current_user.is_authenticated %}
-      <p>Biblioteca <strong><tt>{{ sathubconf.caminho_dll }}</tt></strong>
-          {% if not sathubconf.is_biblioteca_existente %}
+      <h3>{{ sathubconf.descricao }}</h3>
+      <p>Biblioteca <strong><tt>{{ sathubconf.caminho_biblioteca }}</tt></strong>
+          {% if not sathubconf.is_biblioteca_disponivel %}
             <span class="label label-danger">inexistente</span>
           {% endif %}
           <br/>
           Convenção de Chamada <strong><tt>{{ sathubconf.convencao_chamada }}</tt> &ndash; {{ sathubconf.nome_convencao_chamada }}</strong><br/>
           Código de Ativação <strong><tt>{{ sathubconf.codigo_ativacao }}</tt></strong></p>
-
+      <hr/>
       <p><small>Python {{ python_version }} | Flask {{ flask_version }}<br/>
           {{ platform_uname }}</small></p>
     {% else %}

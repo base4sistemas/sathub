@@ -42,7 +42,7 @@ class ResultadoFuncao(object):
 
         if not self.resposta:
             if self.exc_type == ExcecaoRespostaSAT:
-                self.resposta = self.exc_value
+                self.resposta = self.exc_value.resposta
 
 
     @property
