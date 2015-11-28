@@ -18,8 +18,8 @@ sessoes-cx-*.json
 *.sublime-workspace
 *.DS_Store
 
-test/mockup/*.so
-test/mockup/*.o
+tests/libsat-mockup/*.so
+tests/libsat-mockup/*.o
 
 # arquivos gerados pelas bibliotecas SAT
 # Dimep D-SAT

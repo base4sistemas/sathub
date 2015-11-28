@@ -250,9 +250,10 @@ parecida com uma resposta de sucesso. Desse modo, o *mockup* da biblioteca SAT
 torna trivial executar testes simples para verificar o comportamento da API.
 
 Para executar os *smoke tests* será necessário compilar o *mockup* da
-biblioteca SAT que está em ``sathub/test/mockup/``. Você irá precisar de um
-compilador GCC ou outro capaz de compilar o código. Tipicamente, em um ambiente
-Linux, basta invocar ``make`` para produzir o arquivo ``libmockupsat.so``.
+biblioteca SAT que está em ``sathub/tests/libsat-mockup/``. Você irá precisar
+de um compilador GCC ou outro capaz de compilar o código. Tipicamente, em um
+ambiente Linux, basta invocar ``make`` para produzir o arquivo
+``libmockupsat.so``.
 
 Configure o SATHub apontando para o *mockup* da biblioteca SAT (normalmente, a
 convenção de chamada será *Standard C*, equivalente a ``1``):
@@ -263,7 +264,7 @@ convenção de chamada será *Standard C*, equivalente a ``1``):
         "debug": true,
         "codigo_ativacao": "123456789",
         "convencao_chamada": 1,
-        "caminho_dll": "~/sathub/test/mockup/libmockupsat.so"
+        "caminho_dll": "~/sathub/tests/libsat-mockup/libmockupsat.so"
     }
 
 Para executar os testes é necessário instalar o framework para testes de APIs
@@ -284,7 +285,7 @@ que descreve os testes e execute-os com PyRestTest:
 
 .. sourcecode:: shell
 
-    (sat)$ cd ~/sathub/test/tests
+    (sat)$ cd ~/sathub/tests/smoke
     (sat)$ resttest.py http://localhost:5000 smoke.yaml
     Test Group Metodos SAT-CF-e SUCCEEDED: 14/14 Tests Passed!
 
