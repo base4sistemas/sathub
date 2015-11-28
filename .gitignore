@@ -6,6 +6,7 @@ __pycache__/
 /*.egg/
 /*.eggs/
 /docs/_build/
+/.cache/
 
 config-log.json
 config-sathub.json
@@ -19,3 +20,7 @@ sessoes-cx-*.json
 
 test/mockup/*.so
 test/mockup/*.o
+
+# arquivos gerados pelas bibliotecas SAT
+# Dimep D-SAT
+logsat.txt

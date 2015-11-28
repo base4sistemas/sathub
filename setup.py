@@ -83,14 +83,14 @@ setup(
                 'sathub.comum',
                 'sathub.resources',
             ],
-        install_requires=read_requirements('requirements.txt'),
+        install_requires=read_requirements('requirements/base.txt'),
         extras_require={
                 'testing': [
                         'pytest',
                         'pytest-cov',
                     ],
             },
-        tests_require=read_requirements('test-requirements.txt'),
+        tests_require=read_requirements('requirements/test.txt'),
         cmdclass={
                 'test': PyTest
             },
