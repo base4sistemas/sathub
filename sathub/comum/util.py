@@ -22,9 +22,9 @@ import os
 import random
 import sys
 
-from satcfe import BibliotecaSAT
-from satcfe import ClienteSATLocal
-from satcfe.base import FuncoesSAT
+from mfecfe import BibliotecaSAT
+from mfecfe import ClienteSATLocal
+from mfecfe.base import FuncoesSAT
 
 from .config import PROJECT_ROOT
 from .config import conf
