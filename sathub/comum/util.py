@@ -24,7 +24,7 @@ import random
 from mfecfe import BibliotecaSAT
 from mfecfe import ClienteSATLocal
 from mfecfe.base import FuncoesSAT
-
+from satextrato.venda import ExtratoCFeVenda
 from .config import PROJECT_ROOT
 from .config import conf
 
@@ -183,26 +183,26 @@ def instanciar_funcoes_sat(numero_caixa):
     return funcoes_sat
 
 @memoize
-def instanciar_impressora(configuracao_impressora):
-    # TODO importar a impressora correta do tipo correto
+def instanciar_impressora(tipo_conexao , marca, modelo, string_conexao):
 
-    if configuracao_impressora['tipo_conexao'] == 'file':
+    # TODO importar a impressora correta do tipo correto
+    if tipo_conexao == 'file':
         from escpos.file import FileConnection as Connection
-    elif configuracao_impressora['tipo_conexao'] == 'serial':
+    elif tipo_conexao == 'serial':
         from escpos.serial import SerialConnection as Connection
-    elif configuracao_impressora['tipo_conexao'] == 'rede':
+    elif tipo_conexao == 'rede':
         from escpos.network import NetworkConnection as Connection
-    elif configuracao_impressora['tipo_conexao'] == 'usb':
+    elif tipo_conexao == 'usb':
         raise NotImplementedError
 
-    if configuracao_impressora['marca'] == 'elgin':
-        if configuracao_impressora['modelo'] == 'i9':
+    if marca == 'elgin':
+        if modelo == 'i9':
             from escpos.impl.elgin import ElginI9 as Printer
         # TODO Implementar outros tipos
     else:
         from escpos.impl.unknown import CB55C as Printer
 
-    conn = Connection(configuracao_impressora['string_conexao'])
+    conn = Connection(string_conexao)
     impressora = Printer(conn)
     return impressora
 

@@ -35,6 +35,8 @@ from sathub.resources.extrairlogs import ExtrairLogs
 from sathub.resources.bloquearsat import BloquearSAT
 from sathub.resources.desbloquearsat import DesbloquearSAT
 from sathub.resources.trocarcodigodeativacao import TrocarCodigoDeAtivacao
+from sathub.resources.configurarimpressora import ConfigurarImpressora
+from sathub.resources.imprimirvenda import ImprimirVenda
 
 api = restful.Api(app)
 
@@ -52,3 +54,5 @@ api.add_resource(ExtrairLogs, '/hub/v1/extrairlogs')
 api.add_resource(BloquearSAT, '/hub/v1/bloquearsat')
 api.add_resource(DesbloquearSAT, '/hub/v1/desbloquearsat')
 api.add_resource(TrocarCodigoDeAtivacao, '/hub/v1/trocarcodigodeativacao')
+api.add_resource(ConfigurarImpressora, '/hub/v1/configurarimpressora')
+api.add_resource(ImprimirVenda, '/hub/v1/imprimirvenda')
