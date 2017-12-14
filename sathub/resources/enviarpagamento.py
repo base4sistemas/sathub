@@ -22,7 +22,7 @@ import logging
 from flask.ext import restful
 
 from ..comum.util import hexdump
-from ..comum.util import instanciar_funcoes_sat
+from ..comum.util import instanciar_funcoes_vfpe
 from ..custom import request_parser
 
 
@@ -30,10 +30,22 @@ logger = logging.getLogger('sathub.resource')
 
 parser = request_parser()
 
-parser.add_argument('dados_venda',
+parser.add_argument('chave_requisicao', type=str, required=True)
+parser.add_argument('estabelecimento', type=int, required=True)
+parser.add_argument('serial_pos', type=str, required=True)
+parser.add_argument('cnpjsh', type=str, required=True)
+parser.add_argument('bc_icms_proprio', type=str, required=True)
+parser.add_argument('valor', type=str, required=True)
+parser.add_argument('id_fila_validador', type=str, required=True)
+parser.add_argument('multiplos_pag', type=str, required=True)
+parser.add_argument('anti_fraude', type=str, required=True)
+parser.add_argument('moeda', type=str, required=True)
+parser.add_argument('origem_pagamento', type=str, required=True)
+parser.add_argument('chave_acesso_validador', type=str, required=True)
+parser.add_argument('caminho_integrador',
         type=str,
-        required=True,
-        help=u'XML contendo os dados do CF-e de venda')
+        required=False,
+        help=u'Caminho do integrador da MFe')
 
 
 class EnviarPagamento(restful.Resource):
@@ -43,19 +55,26 @@ class EnviarPagamento(restful.Resource):
 
         numero_caixa = args['numero_caixa']
         chave_requisicao = args['chave_requisicao']
-        estabecimento = args['estabecimento']
+        chave_acesso_validador = args['chave_acesso_validador']
+        estabecimento = args['estabelecimento']
         serial_pos = args['serial_pos']
-        cpnj = args['cpnj']
-        icms_base = args['icms_base']
-        vr_total_venda = args['vr_total_venda']
+        cpnj = args['cnpjsh']
+        icms_base = args['bc_icms_proprio']
+        vr_total_venda = args['valor']
         id_fila_validador = args['id_fila_validador']
-        h_multiplos_pagamentos = args['h_multiplos_pagamentos']
-        h_anti_fraude = args['h_anti_fraude']
-        cod_moeda = args['cod_moeda']
-        origem_pagemento = args['origem_pagemento']
+        h_multiplos_pagamentos = args['multiplos_pag']
+        h_anti_fraude = args['anti_fraude']
+        cod_moeda = args['moeda']
+        origem_pagemento = args['origem_pagamento']
 
-        fsat = instanciar_funcoes_sat(numero_caixa)
-        retorno = fsat.enviar_pagamento(
+        if args.get('caminho_integrador'):
+            fvfpe = instanciar_funcoes_vfpe(
+                numero_caixa, chave_acesso_validador,
+                args['caminho_integrador']
+            )
+        else:
+            fvfpe = instanciar_funcoes_vfpe(numero_caixa)
+        retorno = fvfpe.enviar_pagamento(
             chave_requisicao, estabecimento, serial_pos, cpnj, icms_base,
             vr_total_venda, id_fila_validador, h_multiplos_pagamentos,
             h_anti_fraude,cod_moeda, origem_pagemento

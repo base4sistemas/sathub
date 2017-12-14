@@ -35,6 +35,11 @@ parser.add_argument('dados_venda',
         required=True,
         help=u'XML contendo os dados do CF-e de venda')
 
+parser.add_argument('caminho_integrador',
+        type=str,
+        required=False,
+        help=u'Caminho do integrador da MFe')
+
 
 class EnviarDadosVenda(restful.Resource):
 
