@@ -24,7 +24,7 @@ import sys
 
 from mfecfe import BibliotecaSAT
 from mfecfe import ClienteSATLocal
-from mfecfe.base import FuncoesSAT
+from mfecfe.base import FuncoesSAT, FuncoesVFPE
 
 from .config import PROJECT_ROOT
 from .config import conf
@@ -177,17 +177,25 @@ def instanciar_numerador_sessao(numero_caixa):
 
 
 @memoize
-def instanciar_funcoes_sat(numero_caixa):
-    funcoes_sat = FuncoesSAT(BibliotecaSAT(conf.caminho_biblioteca,
+def instanciar_funcoes_sat(numero_caixa, caminho=conf.caminho_biblioteca):
+    funcoes_sat = FuncoesSAT(BibliotecaSAT(caminho,
                     convencao=conf.convencao_chamada),
             codigo_ativacao=conf.codigo_ativacao,
             numerador_sessao=instanciar_numerador_sessao(numero_caixa))
     return funcoes_sat
 
+@memoize
+def instanciar_funcoes_vfpe(numero_caixa, chave_acesso_validador, caminho=conf.caminho_biblioteca):
+    funcoes_vfpe = FuncoesVFPE(
+        BibliotecaSAT(caminho),
+        chave_acesso_validador=chave_acesso_validador,
+        numerador_sessao=instanciar_numerador_sessao(numero_caixa)
+    )
+    return funcoes_vfpe
 
 @memoize
-def instanciar_cliente_local(numero_caixa):
-    cliente = ClienteSATLocal(BibliotecaSAT(conf.caminho_biblioteca,
+def instanciar_cliente_local(numero_caixa, caminho=conf.caminho_biblioteca):
+    cliente = ClienteSATLocal(BibliotecaSAT(caminho,
                     convencao=conf.convencao_chamada),
             codigo_ativacao=conf.codigo_ativacao,
             numerador_sessao=instanciar_numerador_sessao(numero_caixa))

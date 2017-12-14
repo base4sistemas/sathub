@@ -35,30 +35,35 @@ parser.add_argument('dados_venda',
         required=True,
         help=u'XML contendo os dados do CF-e de venda')
 
-parser.add_argument('caminho_integrador',
-        type=str,
-        required=False,
-        help=u'Caminho do integrador da MFe')
 
-
-class EnviarDadosVenda(restful.Resource):
+class EnviarStatusPagamento(restful.Resource):
 
     def post(self):
         args = parser.parse_args()
 
         numero_caixa = args['numero_caixa']
-        dados_venda = args['dados_venda']
-        if args.get('caminho_integrador'):
-            fsat = instanciar_funcoes_sat(
-                numero_caixa, args['caminho_integrador']
-            )
-        else:
-            fsat = instanciar_funcoes_sat(numero_caixa)
+        codigo_autorizacao = args['codigo_autorizacao']
+        bin = args['bin']
+        dono_cartao = args['dono_cartao']
+        data_expiracao = args['data_expiracao']
+        instituicao_financeira = args['instituicao_financeira']
+        parcelas = args['parcelas']
+        codigo_pagamento = args['codigo_pagamento']
+        valor_pagamento = args['valor_pagamento']
+        id_fila = args['id_fila']
+        tipo = args['tipo']
+        ultimos_quatro_digitos = args['ultimos_quatro_digitos']
 
-        retorno = fsat.enviar_dados_venda(dados_venda)
+        fsat = instanciar_funcoes_sat(numero_caixa)
+        retorno = fsat.enviar_pagamento(
+            codigo_autorizacao, bin, dono_cartao,
+            data_expiracao, instituicao_financeira, parcelas,
+            codigo_pagamento, valor_pagamento, id_fila,
+            tipo, ultimos_quatro_digitos
+        )
 
         if logger.isEnabledFor(logging.DEBUG):
-            logger.debug('Retorno "EnviarDadosVenda" '
+            logger.debug('Retorno "EnviarStatusPagamento" '
                     '(numero_caixa=%s)\n%s', numero_caixa, hexdump(retorno))
 
-        return dict(funcao='EnviarDadosVenda', retorno=retorno)
+        return dict(funcao='EnviarStatusPagamento', retorno=retorno)

@@ -7,6 +7,11 @@ __pycache__/
 /*.eggs/
 /docs/_build/
 /.cache/
+/bin/
+/include/
+/lib/
+/local/
+/*.idea/
 
 config-log.json
 config-sathub.json
@@ -17,6 +22,7 @@ sessoes-cx-*.json
 *.pyd
 *.sublime-workspace
 *.DS_Store
+*.api
 
 test/mockup/*.so
 test/mockup/*.o
