@@ -186,8 +186,8 @@ def instanciar_funcoes_sat(numero_caixa):
 
 
 @memoize
-def instanciar_cliente_local(numero_caixa):
-    cliente = ClienteSATLocal(BibliotecaSAT(conf.caminho_biblioteca,
+def instanciar_cliente_local(numero_caixa, caminho=conf.caminho_biblioteca):
+    cliente = ClienteSATLocal(BibliotecaSAT(caminho,
                     convencao=conf.convencao_chamada),
             codigo_ativacao=conf.codigo_ativacao,
             numerador_sessao=instanciar_numerador_sessao(numero_caixa))

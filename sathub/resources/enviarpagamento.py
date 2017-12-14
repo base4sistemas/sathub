@@ -36,24 +36,33 @@ parser.add_argument('dados_venda',
         help=u'XML contendo os dados do CF-e de venda')
 
 
-class EnviarDadosVenda(restful.Resource):
+class EnviarPagamento(restful.Resource):
 
     def post(self):
         args = parser.parse_args()
 
         numero_caixa = args['numero_caixa']
-        dados_venda = args['dados_venda']
-        if args.get('caminho_integrador'):
-            fsat = instanciar_funcoes_sat(
-                numero_caixa, args['caminho_integrador']
-            )
-        else:
-            fsat = instanciar_funcoes_sat(numero_caixa)
+        chave_requisicao = args['chave_requisicao']
+        estabecimento = args['estabecimento']
+        serial_pos = args['serial_pos']
+        cpnj = args['cpnj']
+        icms_base = args['icms_base']
+        vr_total_venda = args['vr_total_venda']
+        id_fila_validador = args['id_fila_validador']
+        h_multiplos_pagamentos = args['h_multiplos_pagamentos']
+        h_anti_fraude = args['h_anti_fraude']
+        cod_moeda = args['cod_moeda']
+        origem_pagemento = args['origem_pagemento']
 
-        retorno = fsat.enviar_dados_venda(dados_venda)
+        fsat = instanciar_funcoes_sat(numero_caixa)
+        retorno = fsat.enviar_pagamento(
+            chave_requisicao, estabecimento, serial_pos, cpnj, icms_base,
+            vr_total_venda, id_fila_validador, h_multiplos_pagamentos,
+            h_anti_fraude,cod_moeda, origem_pagemento
+        )
 
         if logger.isEnabledFor(logging.DEBUG):
-            logger.debug('Retorno "EnviarDadosVenda" '
+            logger.debug('Retorno "EnviarPagamento" '
                     '(numero_caixa=%s)\n%s', numero_caixa, hexdump(retorno))
 
-        return dict(funcao='EnviarDadosVenda', retorno=retorno)
+        return dict(funcao='EnviarPagamento', retorno=retorno)
