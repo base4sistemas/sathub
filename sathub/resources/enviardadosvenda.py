@@ -35,6 +35,8 @@ parser.add_argument('dados_venda',
         required=True,
         help=u'XML contendo os dados do CF-e de venda')
 
+parser.add_argument('codigo_ativacao', type=str, required=True)
+
 parser.add_argument('caminho_integrador',
         type=str,
         required=False,
@@ -48,9 +50,10 @@ class EnviarDadosVenda(restful.Resource):
 
         numero_caixa = args['numero_caixa']
         dados_venda = args['dados_venda']
+        codigo_ativacao = args['codigo_ativacao']
         if args.get('caminho_integrador'):
             fsat = instanciar_funcoes_sat(
-                numero_caixa, args['caminho_integrador']
+                numero_caixa, codigo_ativacao, args['caminho_integrador']
             )
         else:
             fsat = instanciar_funcoes_sat(numero_caixa)
