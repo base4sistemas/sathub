@@ -12,6 +12,7 @@ __pycache__/
 /lib/
 /local/
 /*.idea/
+/share/
 
 config-log.json
 config-sathub.json
