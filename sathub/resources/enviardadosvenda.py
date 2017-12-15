@@ -25,6 +25,8 @@ from ..comum.util import hexdump
 from ..comum.util import instanciar_funcoes_sat
 from ..custom import request_parser
 
+from mfecfe.resposta import RespostaEnviarDadosVenda
+from satextrato.venda import ExtratoCFeVenda
 
 logger = logging.getLogger('sathub.resource')
 
@@ -51,6 +53,7 @@ class EnviarDadosVenda(restful.Resource):
         numero_caixa = args['numero_caixa']
         dados_venda = args['dados_venda']
         codigo_ativacao = args['codigo_ativacao']
+
         if args.get('caminho_integrador'):
             fsat = instanciar_funcoes_sat(
                 numero_caixa, codigo_ativacao, args['caminho_integrador']

@@ -24,8 +24,9 @@ import sys
 
 from mfecfe import BibliotecaSAT
 from mfecfe import ClienteSATLocal
-from mfecfe.base import FuncoesSAT, FuncoesVFPE
 
+from mfecfe.base import FuncoesSAT, FuncoesVFPE
+from satextrato.venda import ExtratoCFeVenda
 from .config import PROJECT_ROOT
 from .config import conf
 
@@ -193,6 +194,29 @@ def instanciar_funcoes_vfpe(numero_caixa, chave_acesso_validador, caminho=conf.c
         numerador_sessao=instanciar_numerador_sessao(numero_caixa)
     )
     return funcoes_vfpe
+
+@memoize
+def instanciar_impressora(tipo_conexao, modelo, string_conexao):
+
+    # TODO importar a impressora correta do tipo correto
+    if tipo_conexao == 'file':
+        from escpos.file import FileConnection as Connection
+    elif tipo_conexao == 'serial':
+        from escpos.serial import SerialConnection as Connection
+    elif tipo_conexao == 'rede':
+        from escpos.network import NetworkConnection as Connection
+    elif tipo_conexao == 'usb':
+        raise NotImplementedError
+
+    if modelo == 'elgini9':
+        from escpos.impl.elgin import ElginI9 as Printer
+        # TODO Implementar outros tipos
+    else:
+        from escpos.impl.unknown import CB55C as Printer
+
+    conn = Connection(string_conexao)
+    impressora = Printer(conn)
+    return impressora
 
 @memoize
 def instanciar_cliente_local(numero_caixa, caminho=conf.caminho_biblioteca):
