@@ -196,7 +196,7 @@ def instanciar_funcoes_vfpe(numero_caixa, chave_acesso_validador, caminho=conf.c
     return funcoes_vfpe
 
 @memoize
-def instanciar_impressora(tipo_conexao , marca, modelo, string_conexao):
+def instanciar_impressora(tipo_conexao, modelo, string_conexao):
 
     # TODO importar a impressora correta do tipo correto
     if tipo_conexao == 'file':
@@ -208,9 +208,8 @@ def instanciar_impressora(tipo_conexao , marca, modelo, string_conexao):
     elif tipo_conexao == 'usb':
         raise NotImplementedError
 
-    if marca == 'elgin':
-        if modelo == 'i9':
-            from escpos.impl.elgin import ElginI9 as Printer
+    if modelo == 'elgini9':
+        from escpos.impl.elgin import ElginI9 as Printer
         # TODO Implementar outros tipos
     else:
         from escpos.impl.unknown import CB55C as Printer

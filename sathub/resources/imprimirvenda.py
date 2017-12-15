@@ -37,6 +37,8 @@ parser.add_argument('dados_venda',
         type=str,
         required=True,
         help=u'XML contendo os dados do CF-e de venda')
+parser.add_argument('modelo', type=str, required=True)
+parser.add_argument('conexao', type=str, required=True)
 
 
 class ImprimirVenda(restful.Resource):
@@ -45,9 +47,10 @@ class ImprimirVenda(restful.Resource):
         args = parser.parse_args()
 
         dados_venda = args['dados_venda']
-        # dados_impressora = args['dados_impressora']
+        modelo = args['modelo']
+        conexao = args['conexao']
 
-        impressora = instanciar_impressora('file', 'elgin', 'i9', '/dev/usb/lp0')
+        impressora = instanciar_impressora('file', modelo, conexao)
 
         xml = StringIO.StringIO(base64.b64decode(dados_venda))
 
