@@ -56,7 +56,7 @@ class EnviarDadosVenda(restful.Resource):
 
         if args.get('caminho_integrador'):
             fsat = instanciar_funcoes_sat(
-                numero_caixa, args['caminho_integrador']
+                numero_caixa, codigo_ativacao, args['caminho_integrador']
             )
         else:
             fsat = instanciar_funcoes_sat(numero_caixa)
