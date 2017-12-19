@@ -40,6 +40,13 @@ parser.add_argument('dados_cancelamento',
         required=True,
         help=u'XML contendo os dados do CF-e de cancelamento')
 
+parser.add_argument('codigo_ativacao', type=str, required=True)
+
+parser.add_argument('caminho_integrador',
+        type=str,
+        required=False,
+        help=u'Caminho do integrador da MFe')
+
 
 class CancelarUltimaVenda(restful.Resource):
 
@@ -50,7 +57,14 @@ class CancelarUltimaVenda(restful.Resource):
         chave_cfe = args['chave_cfe']
         dados_cancelamento = args['dados_cancelamento']
 
-        fsat = instanciar_funcoes_sat(numero_caixa)
+        codigo_ativacao = args['codigo_ativacao']
+
+        if args.get('caminho_integrador'):
+            fsat = instanciar_funcoes_sat(
+                numero_caixa, codigo_ativacao, args['caminho_integrador']
+            )
+        else:
+            fsat = instanciar_funcoes_sat(numero_caixa)
         retorno = fsat.cancelar_ultima_venda(chave_cfe, dados_cancelamento)
 
         if logger.isEnabledFor(logging.DEBUG):
