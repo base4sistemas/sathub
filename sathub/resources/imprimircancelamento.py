@@ -28,6 +28,15 @@ from ..custom import request_parser
 import base64
 import StringIO
 
+from satextrato.config import conf
+
+conf.code128_quebrar = True
+conf.nota_rodape.esquerda = 'https://kmee.com.br'
+conf.nota_rodape.direita = 'KMEE INFORMATICA LTDA'
+conf.avancar_linhas = 3
+conf.colunas.condensado = 56
+conf.colunas.expandido = 23
+conf.colunas.normal = 47
 
 logger = logging.getLogger('sathub.resource')
 
