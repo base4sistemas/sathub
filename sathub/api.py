@@ -39,6 +39,7 @@ from sathub.resources.verificarstatusvalidador import VerificarStatusValidador
 from sathub.resources.enviarpagamento import EnviarPagamento
 from sathub.resources.configurarimpressora import ConfigurarImpressora
 from sathub.resources.imprimirvenda import ImprimirVenda
+from sathub.resources.imprimircancelamento import ImprimirCancelamento
 
 api = restful.Api(app)
 
@@ -60,3 +61,4 @@ api.add_resource(VerificarStatusValidador, '/hub/v1/verificarstatusvalidador')
 api.add_resource(EnviarPagamento, '/hub/v1/enviarpagamento')
 api.add_resource(ConfigurarImpressora, '/hub/v1/configurarimpressora')
 api.add_resource(ImprimirVenda, '/hub/v1/imprimirvenda')
+api.add_resource(ImprimirCancelamento, '/hub/v1/imprimircancelamento')
