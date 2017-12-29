@@ -37,6 +37,7 @@ conf.avancar_linhas = 3
 conf.colunas.condensado = 56
 conf.colunas.expandido = 23
 conf.colunas.normal = 47
+conf.exibir_nome_consumidor = True
 
 logger = logging.getLogger('sathub.resource')
 
