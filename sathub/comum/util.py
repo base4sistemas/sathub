@@ -20,15 +20,13 @@
 import json
 import os
 import random
-import sys
 
-from satcfe import BibliotecaSAT
-from satcfe import ClienteSATLocal
-from satcfe.base import FuncoesSAT
-
+from mfecfe import BibliotecaSAT
+from mfecfe import ClienteSATLocal
+from mfecfe.base import FuncoesSAT
+from satextrato.venda import ExtratoCFeVenda
 from .config import PROJECT_ROOT
 from .config import conf
-
 
 NUM_SESSAO_MIN = 100000
 NUM_SESSAO_MAX = 999999
@@ -184,6 +182,29 @@ def instanciar_funcoes_sat(numero_caixa):
             numerador_sessao=instanciar_numerador_sessao(numero_caixa))
     return funcoes_sat
 
+@memoize
+def instanciar_impressora(tipo_conexao , marca, modelo, string_conexao):
+
+    # TODO importar a impressora correta do tipo correto
+    if tipo_conexao == 'file':
+        from escpos.file import FileConnection as Connection
+    elif tipo_conexao == 'serial':
+        from escpos.serial import SerialConnection as Connection
+    elif tipo_conexao == 'rede':
+        from escpos.network import NetworkConnection as Connection
+    elif tipo_conexao == 'usb':
+        raise NotImplementedError
+
+    if marca == 'elgin':
+        if modelo == 'i9':
+            from escpos.impl.elgin import ElginI9 as Printer
+        # TODO Implementar outros tipos
+    else:
+        from escpos.impl.unknown import CB55C as Printer
+
+    conn = Connection(string_conexao)
+    impressora = Printer(conn)
+    return impressora
 
 @memoize
 def instanciar_cliente_local(numero_caixa):
