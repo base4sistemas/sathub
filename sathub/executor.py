@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# encoding=utf8
 #
 # sathub/executor.py
 #
@@ -17,7 +17,11 @@
 # limitations under the License.
 #
 
+
 import sys
+
+reload(sys)
+sys.setdefaultencoding('utf8')
 import traceback
 
 from unidecode import unidecode
@@ -107,5 +111,6 @@ def consultarstatusoperacional(form):
 def extrairlogs(form):
     resultado = _executar('ExtrairLogs', 'extrair_logs')
     if resultado.sucesso: # (!) alerta para 'quick fix'
-        resultado.conteudo_log = unidecode(resultado.resposta.conteudo())
+        resultado.conteudo_log = unicode(resultado.resposta.conteudo(),errors='ignore')
     return resultado
+

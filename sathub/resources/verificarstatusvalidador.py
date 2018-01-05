@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# sathub/resources/cancelarultimavenda.py
+# sathub/resources/enviardadosvenda.py
 #
 # Copyright 2015 Base4 Sistemas Ltda ME
 #
@@ -30,45 +30,26 @@ logger = logging.getLogger('sathub.resource')
 
 parser = request_parser()
 
-parser.add_argument('chave_cfe',
+parser.add_argument('dados_venda',
         type=str,
         required=True,
-        help=u'Chave do CF-e a ser cancelado (prefixada "CFe...")')
-
-parser.add_argument('dados_cancelamento',
-        type=str,
-        required=True,
-        help=u'XML contendo os dados do CF-e de cancelamento')
-
-parser.add_argument('codigo_ativacao', type=str, required=True)
-
-parser.add_argument('caminho_integrador',
-        type=str,
-        required=False,
-        help=u'Caminho do integrador da MFe')
+        help=u'XML contendo os dados do CF-e de venda')
 
 
-class CancelarUltimaVenda(restful.Resource):
+class VerificarStatusValidador(restful.Resource):
 
     def post(self):
         args = parser.parse_args()
 
         numero_caixa = args['numero_caixa']
-        chave_cfe = args['chave_cfe']
-        dados_cancelamento = args['dados_cancelamento']
+        cpnj = args['cpnj']
+        id_fila = args['id_fila']
 
-        codigo_ativacao = args['codigo_ativacao']
-
-        if args.get('caminho_integrador'):
-            fsat = instanciar_funcoes_sat(
-                numero_caixa, codigo_ativacao, args['caminho_integrador']
-            )
-        else:
-            fsat = instanciar_funcoes_sat(numero_caixa)
-        retorno = fsat.cancelar_ultima_venda(chave_cfe, dados_cancelamento)
+        fsat = instanciar_funcoes_sat(numero_caixa)
+        retorno = fsat.verificar_status_validador(cpnj, id_fila)
 
         if logger.isEnabledFor(logging.DEBUG):
-            logger.debug('Retorno "CancelarUltimaVenda" '
+            logger.debug('Retorno "EnviarDadosVenda" '
                     '(numero_caixa=%s)\n%s', numero_caixa, hexdump(retorno))
 
-        return dict(funcao='CancelarUltimaVenda', retorno=retorno)
+        return dict(funcao='VerificarStatusValidador', retorno=retorno)

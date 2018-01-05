@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# sathub/resources/cancelarultimavenda.py
+# sathub/resources/enviardadosvenda.py
 #
 # Copyright 2015 Base4 Sistemas Ltda ME
 #
@@ -30,45 +30,40 @@ logger = logging.getLogger('sathub.resource')
 
 parser = request_parser()
 
-parser.add_argument('chave_cfe',
+parser.add_argument('dados_venda',
         type=str,
         required=True,
-        help=u'Chave do CF-e a ser cancelado (prefixada "CFe...")')
-
-parser.add_argument('dados_cancelamento',
-        type=str,
-        required=True,
-        help=u'XML contendo os dados do CF-e de cancelamento')
-
-parser.add_argument('codigo_ativacao', type=str, required=True)
-
-parser.add_argument('caminho_integrador',
-        type=str,
-        required=False,
-        help=u'Caminho do integrador da MFe')
+        help=u'XML contendo os dados do CF-e de venda')
 
 
-class CancelarUltimaVenda(restful.Resource):
+class EnviarStatusPagamento(restful.Resource):
 
     def post(self):
         args = parser.parse_args()
 
         numero_caixa = args['numero_caixa']
-        chave_cfe = args['chave_cfe']
-        dados_cancelamento = args['dados_cancelamento']
+        codigo_autorizacao = args['codigo_autorizacao']
+        bin = args['bin']
+        dono_cartao = args['dono_cartao']
+        data_expiracao = args['data_expiracao']
+        instituicao_financeira = args['instituicao_financeira']
+        parcelas = args['parcelas']
+        codigo_pagamento = args['codigo_pagamento']
+        valor_pagamento = args['valor_pagamento']
+        id_fila = args['id_fila']
+        tipo = args['tipo']
+        ultimos_quatro_digitos = args['ultimos_quatro_digitos']
 
-        codigo_ativacao = args['codigo_ativacao']
-
-        if args.get('caminho_integrador'):
-            fsat = instanciar_funcoes_sat(
-                numero_caixa, codigo_ativacao, args['caminho_integrador']
-            )
-        else:
-            fsat = instanciar_funcoes_sat(numero_caixa)
-        retorno = fsat.cancelar_ultima_venda(chave_cfe, dados_cancelamento)
+        fsat = instanciar_funcoes_sat(numero_caixa)
+        retorno = fsat.enviar_pagamento(
+            codigo_autorizacao, bin, dono_cartao,
+            data_expiracao, instituicao_financeira, parcelas,
+            codigo_pagamento, valor_pagamento, id_fila,
+            tipo, ultimos_quatro_digitos
+        )
 
         if logger.isEnabledFor(logging.DEBUG):
-            logger.debug('Retorno "CancelarUltimaVenda" '
+            logger.debug('Retorno "EnviarStatusPagamento" '
                     '(numero_caixa=%s)\n%s', numero_caixa, hexdump(retorno))
 
-        return dict(funcao='CancelarUltimaVenda', retorno=retorno)
+        return dict(funcao='EnviarStatusPagamento', retorno=retorno)

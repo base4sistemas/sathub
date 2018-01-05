@@ -22,10 +22,11 @@ import os
 import random
 import sys
 
-from satcfe import BibliotecaSAT
-from satcfe import ClienteSATLocal
-from satcfe.base import FuncoesSAT
+from mfecfe import BibliotecaSAT
+from mfecfe import ClienteSATLocal
 
+from mfecfe.base import FuncoesSAT, FuncoesVFPE
+from satextrato.venda import ExtratoCFeVenda
 from .config import PROJECT_ROOT
 from .config import conf
 
@@ -177,17 +178,49 @@ def instanciar_numerador_sessao(numero_caixa):
 
 
 @memoize
-def instanciar_funcoes_sat(numero_caixa):
-    funcoes_sat = FuncoesSAT(BibliotecaSAT(conf.caminho_biblioteca,
+def instanciar_funcoes_sat(numero_caixa, codigo_ativacao,
+                           caminho=conf.caminho_biblioteca):
+    funcoes_sat = FuncoesSAT(BibliotecaSAT(caminho,
                     convencao=conf.convencao_chamada),
-            codigo_ativacao=conf.codigo_ativacao,
+            codigo_ativacao=codigo_ativacao,
             numerador_sessao=instanciar_numerador_sessao(numero_caixa))
     return funcoes_sat
 
+@memoize
+def instanciar_funcoes_vfpe(numero_caixa, chave_acesso_validador, caminho=conf.caminho_biblioteca):
+    funcoes_vfpe = FuncoesVFPE(
+        BibliotecaSAT(caminho),
+        chave_acesso_validador=chave_acesso_validador,
+        numerador_sessao=instanciar_numerador_sessao(numero_caixa)
+    )
+    return funcoes_vfpe
 
 @memoize
-def instanciar_cliente_local(numero_caixa):
-    cliente = ClienteSATLocal(BibliotecaSAT(conf.caminho_biblioteca,
+def instanciar_impressora(tipo_conexao, modelo, string_conexao):
+
+    # TODO importar a impressora correta do tipo correto
+    if tipo_conexao == 'file':
+        from escpos.file import FileConnection as Connection
+    elif tipo_conexao == 'serial':
+        from escpos.serial import SerialConnection as Connection
+    elif tipo_conexao == 'rede':
+        from escpos.network import NetworkConnection as Connection
+    elif tipo_conexao == 'usb':
+        raise NotImplementedError
+
+    if modelo == 'elgini9':
+        from escpos.impl.elgin import ElginI9 as Printer
+        # TODO Implementar outros tipos
+    else:
+        from escpos.impl.unknown import CB55C as Printer
+
+    conn = Connection(string_conexao)
+    impressora = Printer(conn)
+    return impressora
+
+@memoize
+def instanciar_cliente_local(numero_caixa, caminho=conf.caminho_biblioteca):
+    cliente = ClienteSATLocal(BibliotecaSAT(caminho,
                     convencao=conf.convencao_chamada),
             codigo_ativacao=conf.codigo_ativacao,
             numerador_sessao=instanciar_numerador_sessao(numero_caixa))
