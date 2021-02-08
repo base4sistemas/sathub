@@ -1,5 +1,7 @@
 FROM python:3.8-alpine
 
+RUN adduser -D sathub
+
 WORKDIR /home/sathub
 
 COPY ./requirements/base.txt requirements.txt
@@ -36,5 +38,8 @@ COPY sathub ./sathub
 COPY config-sathub.json ./
 COPY dll ./dll
 
+RUN chown -R sathub:sathub ./
+
+USER sathub
 
 CMD python runserver.py 
