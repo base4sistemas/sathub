@@ -7,6 +7,7 @@ WORKDIR /home/sathub
 COPY ./requirements/base.txt requirements.txt
 
 COPY ./dll/sat.ini /var/tanca_jetway/sat.ini
+COPY ./dll/libsat_v3_0_0_3_x64.so /opt/tanca/libsat_v3_0_0_3_x64.so
 
 RUN apk --no-cache add \
     build-base \
