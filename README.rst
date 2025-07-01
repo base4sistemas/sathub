@@ -33,6 +33,7 @@ Projeto SATHub
     Refer to the `official web site <http://www.fazenda.sp.gov.br/sat/>`_ for
     more information (in brazilian portuguese only).
 
+**A SEFAZ/SP decidiu por descontinuar o projeto SAT-CF-e.** Para detalhes acesse a `Portaria SRE nº 79 <https://legislacao.fazenda.sp.gov.br/Paginas/Portaria-SRE-79-de-2024.aspx>`_.
 
 Este projeto está relacionado à tecnologia `SAT-CF-e`_ para autorização e
 transmissão de documentos CF-e (*Cupons Fiscais eletrônicos*).
