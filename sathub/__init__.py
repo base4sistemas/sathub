@@ -17,6 +17,8 @@
 # limitations under the License.
 #
 
+from __future__ import division, print_function, unicode_literals
+
 import base64
 import os
 
@@ -30,7 +32,7 @@ from flask import Flask
 app = Flask(__name__)
 app.debug = conf.is_debug
 app.secret_key = os.environ.get('SATHUB_SECRET_KEY') or \
-        base64.b64encode('Nullum secretum est ubi regnat ebrietas')
+        base64.b64encode(b'Nullum secretum est ubi regnat ebrietas')
 
 import sathub.api
 import sathub.views
