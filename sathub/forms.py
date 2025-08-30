@@ -30,12 +30,12 @@ class LoginForm(Form):
 
     username = StringField(u'Nome de Usuário',
             validators=[
-                    validators.required(),
+                    validators.InputRequired(),
                     validators.length(min=2, max=20),])
 
     password = PasswordField('Senha',
             validators=[
-                    validators.required(),
+                    validators.InputRequired(),
                     validators.length(min=6, max=20),])
 
     class Meta:

@@ -24,6 +24,9 @@ import logging
 import os
 import sys
 
+if sys.version_info[0] >= 3:
+    unicode = str
+
 from logging.config import dictConfig
 
 from cerberus import Validator

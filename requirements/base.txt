@@ -1,7 +1,9 @@
 Flask == 0.10.1
 Flask-Login == 0.3.0
 Flask-RESTful == 0.3.3
-Flask-WTF == 0.12
+Flask-WTF == 1.0.0
 Unidecode == 0.04.18
 satcomum >= 0.0.9
 satcfe >= 0.0.8
+werkzeug==0.16.1
+itsdangerous==2.0.1
